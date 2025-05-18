@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Austine Iheji | Tech & Healthcare Innovator</title>
+    <title>Austine Iheji | Tech & Human-Centered Innovator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -621,6 +621,11 @@
             color: rgba(255, 255, 255, 0.5);
         }
 
+        .form-status {
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
         textarea.form-control {
             min-height: 150px;
             resize: vertical;
@@ -845,7 +850,7 @@
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
-                <h1>INNOVATING AT THE INTERSECTION OF HEALTHCARE & TECHNOLOGY</h1>
+                <h1>INNOVATING AT THE INTERSECTION OF IMPACT & TECHNOLOGY</h1>
                 <p>I'm an interdisciplinary problem-solver with expertise in <span class="typed-text" id="typedText">building human-centered solutions</span></p>
                 <div class="hero-buttons">
                     <a href="#projects" class="btn">View My Work</a>
@@ -1149,20 +1154,27 @@
                 </div>
                 
                 <div class="contact-form">
+                    <!-- Updated Contact Form -->
                     <form id="contactForm">
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Your Name" required>
+                            <input type="text" class="form-control" name="name" id="name" placeholder="Your Name" required>
                         </div>
                         <div class="form-group">
-                            <input type="email" class="form-control" placeholder="Your Email" required>
+                            <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Subject">
+                            <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject">
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" placeholder="Your Message" required></textarea>
+                            <textarea class="form-control" name="message" id="message" placeholder="Your Message" required></textarea>
                         </div>
-                        <button type="submit" class="btn">Send Message</button>
+                        <button type="submit" class="btn" id="submitBtn">
+                            <span id="btnText">Send Message</span>
+                            <span id="btnLoader" style="display: none;">
+                                <i class="fas fa-spinner fa-spin"></i> Sending...
+                            </span>
+                        </button>
+                        <div id="formStatus" class="form-status"></div>
                     </form>
                 </div>
             </div>
@@ -1180,6 +1192,9 @@
     <a href="#" class="back-to-top" id="backToTop">
         <i class="fas fa-arrow-up"></i>
     </a>
+
+    <!-- Add EmailJS CDN -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <!-- JavaScript -->
     <script>
@@ -1360,25 +1375,79 @@
             });
         }
         
-        // Form submission
-        function setupContactForm() {
-            const contactForm = document.getElementById('contactForm');
-            
-            contactForm.addEventListener('submit', function(e) {
-                e.preventDefault();
+// Form submission
+function setupContactForm() {
+    const contactForm = document.getElementById('contactForm');
+    const formStatus = document.getElementById('formStatus');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnLoader = document.getElementById('btnLoader');
+    
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        btnText.style.display = 'none';
+        btnLoader.style.display = 'inline-block';
+        submitBtn.disabled = true;
+        
+        // Get form data
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const subject = document.getElementById('subject').value || 'Email from your website';
+        const message = document.getElementById('message').value;
+        
+        // Get current time
+        const now = new Date();
+        const time = now.toLocaleString();
+        
+        // Prepare data for EmailJS
+        const templateParams = {
+            name: name,
+            email: email,
+            subject: subject,
+            message: message,
+            time: time,
+            to_email: 'austineihejiben12@gmail.com' // You can set this in the EmailJS template instead
+        };
+        
+        // Send email using EmailJS
+        emailjs.send("service_urazj5j", "template_r7zuv8h", templateParams)
+            .then(function(response) {
+                console.log('SUCCESS!', response.status, response.text);
                 
-                // Here you would typically send the form data to your server
-                // For this demo, just show a success message
-                const formElements = contactForm.elements;
-                contactForm.innerHTML = `
-                    <div style="text-align: center; padding: 40px 0;">
-                        <i class="fas fa-check-circle" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px;"></i>
-                        <h3>Message Sent!</h3>
-                        <p>Thank you for reaching out. I'll get back to you soon.</p>
+                // Reset form
+                contactForm.reset();
+                
+                // Show success message
+                formStatus.innerHTML = `
+                    <div style="text-align: center; padding: 20px 0; color: #32b8cd;">
+                        <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <p>Message sent successfully! I'll get back to you soon.</p>
                     </div>
                 `;
+            })
+            .catch(function(error) {
+                console.log('FAILED...', error);
+                
+                // Show error message
+                formStatus.innerHTML = `
+                    <div style="text-align: center; padding: 20px 0; color: #ff4545;">
+                        <i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <p>Something went wrong! Please try again or contact me directly via email.</p>
+                    </div>
+                `;
+            })
+            .finally(function() {
+                // Reset button state
+                btnText.style.display = 'inline-block';
+                btnLoader.style.display = 'none';
+                submitBtn.disabled = false;
             });
-        }
+    });
+}
+
+
         
         // Initialize all functions when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
