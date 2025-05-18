@@ -1375,6 +1375,14 @@
             });
         }
         
+// Initialize EmailJS
+(function() {
+    // EmailJS public key
+    emailjs.init({
+        publicKey: "5lwBfaSI-wWb4Hfez",
+    });
+})();
+
 // Form submission
 function setupContactForm() {
     const contactForm = document.getElementById('contactForm');
@@ -1408,6 +1416,7 @@ function setupContactForm() {
             subject: subject,
             message: message,
             time: time,
+            to_email: 'austineihejiben12@gmail.com' // You can set this in the EmailJS template instead
         };
         
         // Send email using EmailJS
@@ -1445,7 +1454,6 @@ function setupContactForm() {
             });
     });
 }
-
 
         
         // Initialize all functions when DOM is loaded
