@@ -329,6 +329,39 @@
             border-radius: 2px;
         }
 
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .stat-box {
+            background-color: rgba(0, 184, 212, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(0, 184, 212, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 184, 212, 0.2);
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text);
+        }
+
         /* Skills Section */
         .skills {
             background-color: var(--space-bg);
@@ -893,6 +926,21 @@
                         <div class="stat">
                             <h3>Education</h3>
                             <p>BSc. Computer Science, Ashesi University</p>
+                        </div>
+
+                        <div class="stats">
+                            <div class="stat-box">
+                                <div class="stat-number">3+</div>
+                                <div class="stat-label">Years of Experience</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">6+</div>
+                                <div class="stat-label">Major Projects</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">10+</div>
+                                <div class="stat-label">Tech Skills</div>
+                            </div>
                         </div>
                     </div>
                 </div>
